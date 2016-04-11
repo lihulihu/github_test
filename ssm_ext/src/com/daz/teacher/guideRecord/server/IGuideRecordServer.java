@@ -10,4 +10,5 @@ public interface IGuideRecordServer {
 	public PageInfo<GuideRecordPojo> selectGuideRecord(Map<String, Object> map,int pageNum,int pageSize) throws Exception;
 	public Boolean deleteRecord(Map<String, Object> map) throws Exception;
 	public Boolean updateRecord(GuideRecordPojo guideRecordPojo) throws Exception;
+	public GuideRecordPojo selectOneGuideRecord(Map<String, Object> map) throws Exception;
 }

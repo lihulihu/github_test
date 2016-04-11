@@ -19,7 +19,9 @@ public class GuideRecordAction extends ActionSupport{
 	private String teacherId;
 	public String page;
 	public String limit;
-	private PageInfo<GuideRecordPojo> resultList;
+	public String recordCode;
+	public PageInfo<GuideRecordPojo> resultList;
+	public GuideRecordPojo guideRecordPojo;
 	@Autowired
 	private IGuideRecordServer guideRecordServer;
 	public String addGuideRecord(){
@@ -30,7 +32,12 @@ public class GuideRecordAction extends ActionSupport{
 			Map<String, Object> session = ActionContext.getContext().getSession();
 			teacherId = (String)session.get("userId");
 			guideRecordPojo.setTeacherId(teacherId);
-			guideRecordServer.addGuideRecord(guideRecordPojo);
+			if(guideRecordPojo.getRecordCode() != null && !"".equals(guideRecordPojo.getRecordCode())){
+				guideRecordServer.updateRecord(guideRecordPojo);
+			}else{
+				guideRecordServer.addGuideRecord(guideRecordPojo);
+			}
+			
 			this.setSuccess(true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -54,6 +61,18 @@ public class GuideRecordAction extends ActionSupport{
 		}
 		try {
 			resultList = guideRecordServer.selectGuideRecord(map, s, l);
+			this.setSuccess(true);
+		} catch (Exception e) {
+			this.setSuccess(false);
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
+	public String selectGuideRecordByCode(){
+		Map<String, Object> map = new HashMap<>();
+		map.put("recordCode", recordCode);
+		try {
+			guideRecordPojo = guideRecordServer.selectOneGuideRecord(map);
 			this.setSuccess(true);
 		} catch (Exception e) {
 			this.setSuccess(false);
@@ -90,6 +109,18 @@ public class GuideRecordAction extends ActionSupport{
 	}
 	public void setResultList(PageInfo<GuideRecordPojo> resultList) {
 		this.resultList = resultList;
+	}
+	public GuideRecordPojo getGuideRecordPojo() {
+		return guideRecordPojo;
+	}
+	public void setGuideRecordPojo(GuideRecordPojo guideRecordPojo) {
+		this.guideRecordPojo = guideRecordPojo;
+	}
+	public String getRecordCode() {
+		return recordCode;
+	}
+	public void setRecordCode(String recordCode) {
+		this.recordCode = recordCode;
 	}
 	
 	

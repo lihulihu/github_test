@@ -75,29 +75,29 @@ delete from GUIDE_RECORD
 			</if>
 		</trim>
 </delete>
-<update id="updateMessage" parameterType="com.daz.teacher.guideRecord.pojo.GuideRecordPojo">
+<update id="updateRecord" parameterType="com.daz.teacher.guideRecord.pojo.GuideRecordPojo">
 		update GUIDE_RECORD
 		<set>			
 			<if test = "guideTime != null">
-			GUIDE_TIME=#{guideTime}
+			GUIDE_TIME=#{guideTime},
 			</if>	
 			<if test = "guideType != null">
-			GUIDE_TYPE=#{guideType}
+			GUIDE_TYPE=#{guideType},
 			</if>
 			<if test = "studentNumber != null">
-			STUDENT_NUMBER=#{studentNumber}
+			STUDENT_NUMBER=#{studentNumber},
 			</if>	
 			<if test = "guideTitle != null">
-			GUIDE_TITLE=#{guideTitle}
+			GUIDE_TITLE=#{guideTitle},
 			</if>
 			<if test = "guideText != null">
-			GUIDE_TEXT=#{guideText}
+			GUIDE_TEXT=#{guideText},
 			</if>
 			<if test = "guideSummary != null">
 			GUIDE_SUMMARY=#{guideSummary}
 			</if>
 		</set>
-		WHERE GUIDE_CODE=#{guideCode}
+		WHERE RECORD_CODE=#{recordCode}
 </update>
 
 </mapper>

@@ -1,5 +1,5 @@
 NewRecord = function(type){
-	Ext.Msg.alert(type);
+	
 	var recordPanel = Ext.create('Ext.Panel',{
 			id:'record',
 		 	frame: true,		 
@@ -35,6 +35,10 @@ NewRecord = function(type){
             	text:'指导记录表',
             	style:"font-size:30px",
             	
+            },{
+            	id:'recordCode',
+            	xtype: 'textfield',
+            	hidden:true
             },{
             	
                 text: '指导人'
@@ -147,23 +151,54 @@ NewRecord = function(type){
                 
             }],
             buttonAlign : "center",
-            
+            afterrender: loadRecordMessage()
 	});
-	 Ext.Ajax.request( {
-	    	url : "searchTeacherAction.action", 
-	    	params : {
-	    		teacherId : teacherId,
-	    	}, //参数
-	    	success : function(response, option) {
-	    		var obj = Ext.decode(response.responseText);
-	    		Ext.getCmp("recordteacherName").setValue(obj.list[0].teacherName);
-	    		Ext.getCmp('recordacadmy').setValue(obj.list[0].academy.valueName);
-	    		Ext.getCmp('recordprofessional').setValue(obj.list[0].professional.valueName);
-	    	},
-	    	failure : function(response, option) {
-	    		Ext.Msg.alert("失败", "系统错误");
-	    	}
-	    	});
+	function loadRecordMessage(){
+		
+		if(type =="-1"){
+			 Ext.Ajax.request( {
+			    	url : "searchTeacherAction.action", 
+			    	params : {
+			    		teacherId : teacherId,
+			    	}, //参数
+			    	success : function(response, option) {
+			    		var obj = Ext.decode(response.responseText);
+			    		Ext.getCmp("recordteacherName").setValue(obj.list[0].teacherName);
+			    		Ext.getCmp('recordacadmy').setValue(obj.list[0].academy.valueName);
+			    		Ext.getCmp('recordprofessional').setValue(obj.list[0].professional.valueName);
+			    	},
+			    	failure : function(response, option) {
+			    		Ext.Msg.alert("失败", "系统错误");
+			    	}
+			    	});
+		}
+		else{
+			Ext.Ajax.request( {
+		    	url : "selectGuideRecodeByCodeAction.action", 
+		    	params : {
+		    		recordCode : type,
+		    	}, //参数
+		    	success : function(response, option) {
+		    		var obj = Ext.decode(response.responseText).guideRecordPojo;
+		    		Ext.getCmp("recordCode").setValue(obj.recordCode);
+		    		Ext.getCmp("recordteacherName").setValue(obj.teacherName);
+		    		Ext.getCmp('recordacadmy').setValue(obj.acadmy);
+		    		Ext.getCmp('recordprofessional').setValue(obj.professional);
+		    		Ext.getCmp('recordguideTime').setValue(obj.guideTime);
+		    		Ext.getCmp('recordguideType').setValue(obj.guideType);
+		    		Ext.getCmp('recordstudentNumber').setValue(obj.studentNumber);
+		    		Ext.getCmp('recordguideTitle').setValue(obj.guideTitle);
+		    		Ext.getCmp('recordguideText').setValue(obj.guideText);
+		    		Ext.getCmp('recordguideSummary').setValue(obj.guideSummary);
+		    	},
+		    	failure : function(response, option) {
+		    		Ext.Msg.alert("失败", "系统错误");
+		    	}
+		    	});
+	
+		}
+	}
+	
 	function prn1_preview() { 
 	    CreateOneFormPage(); 
 	    //LODOP.SET_PREVIEW_WINDOW(1,1,1,);
@@ -208,6 +243,7 @@ NewRecord = function(type){
 	  
 	  function sumbit() {
 	    	var jsonString="{'teacherName':"+"'"+Ext.getCmp('recordteacherName').value+"'"
+	    	+",'recordCode':"+"'"+Ext.getCmp('recordCode').value+"'"
 	    	+",'acadmy':"+"'"+Ext.getCmp('recordacadmy').value+"'"
 	    	+",'professional':"+"'"+Ext.getCmp('recordprofessional').value+"'"
 	    	+",'guideTime':"+"'"+Ext.Date.format(new Date(Ext.getCmp('recordguideTime').getValue()),'Y-m-d')+"'"
@@ -224,7 +260,13 @@ NewRecord = function(type){
 	    			AddJson : jsonString,
 	    		}, //参数
 	    		success : function(response, option) {
-	    			Ext.Msg.alert("提示", "保存成功");
+	    			var obj = Ext.decode(response.responseText);
+	    			if(obj.success){
+	    				Ext.Msg.alert("提示", "保存成功");
+	    			}else{
+	    				Ext.Msg.alert("提示", "保存失败");
+	    			}
+	    			
 	    		},
 	    		failure : function(response, option) {
 	    			Ext.Msg.alert("提示", "保存失败");

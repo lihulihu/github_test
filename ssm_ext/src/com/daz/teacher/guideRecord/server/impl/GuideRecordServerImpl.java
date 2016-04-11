@@ -23,6 +23,9 @@ public class GuideRecordServerImpl implements IGuideRecordServer{
 		List<GuideRecordPojo> list = guideRecordDao.selectGuideRecord(map);
 		return new PageInfo<>(list);
 	}
+	public GuideRecordPojo selectOneGuideRecord(Map<String, Object> map) throws Exception{
+		return guideRecordDao.selectGuideRecord(map).get(0);
+	}
 	public Boolean deleteRecord(Map<String, Object> map) throws Exception{
 		if(guideRecordDao.deleteRecord(map)>0){
 			return true;

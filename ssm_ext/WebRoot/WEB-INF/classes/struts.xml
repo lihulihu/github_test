@@ -159,6 +159,11 @@
 			<param name="includeProperties">resultList.*,success</param>
 	</result>	
 </action>
+<action name="selectGuideRecodeByCodeAction" class="com.daz.teacher.guideRecord.action.GuideRecordAction" method="selectGuideRecordByCode">
+	<result name="success" type="json">
+			<param name="includeProperties">guideRecordPojo.*,success</param>
+	</result>	
+</action>
 <!-- 指导记录Action -->
 
 <action name="teacherTreeAction" class="com.daz.teacher.teacherInfo.action.TeacherTreeAction" method="selectTeacherTree">
