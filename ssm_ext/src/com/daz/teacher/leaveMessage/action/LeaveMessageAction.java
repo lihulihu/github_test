@@ -76,7 +76,6 @@ public class LeaveMessageAction extends ActionSupport{
 		}
 		leaveMessagePojo.setStudent(studentPojo);
 		leaveMessagePojo.setTeacher(teacherInfo);
-		
 		try {
 			
 			leaveMessageService.addLeaveMessage(leaveMessagePojo);
