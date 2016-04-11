@@ -1,12 +1,15 @@
 package com.daz.teacher.guideRecord.action;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.alibaba.fastjson.JSON;
+import com.daz.student.pojo.studentPojo;
 import com.daz.teacher.guideRecord.pojo.GuideRecordPojo;
 import com.daz.teacher.guideRecord.server.IGuideRecordServer;
+import com.github.pagehelper.PageInfo;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -14,6 +17,9 @@ public class GuideRecordAction extends ActionSupport{
 	private String AddJson;
 	private Boolean success;
 	private String teacherId;
+	public String page;
+	public String limit;
+	private PageInfo<GuideRecordPojo> resultList;
 	@Autowired
 	private IGuideRecordServer guideRecordServer;
 	public String addGuideRecord(){
@@ -33,6 +39,28 @@ public class GuideRecordAction extends ActionSupport{
 		}
 		return SUCCESS;
 	}
+	public String selectAllRecord(){
+		Map<String, Object> session = ActionContext.getContext().getSession();
+		teacherId = (String)session.get("userId");
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("techerId", teacherId);
+		int s=0;
+		int l=0;
+		if(page!=null){
+			s = Integer.parseInt(page);
+		}
+		if(limit != null){
+			l = Integer.parseInt(limit);
+		}
+		try {
+			resultList = guideRecordServer.selectGuideRecord(map, s, l);
+			this.setSuccess(true);
+		} catch (Exception e) {
+			this.setSuccess(false);
+			e.printStackTrace();
+		}
+		return SUCCESS;
+	}
 	public String getAddJson() {
 		return AddJson;
 	}
@@ -44,6 +72,24 @@ public class GuideRecordAction extends ActionSupport{
 	}
 	public void setSuccess(Boolean success) {
 		this.success = success;
+	}
+	public String getPage() {
+		return page;
+	}
+	public void setPage(String page) {
+		this.page = page;
+	}
+	public String getLimit() {
+		return limit;
+	}
+	public void setLimit(String limit) {
+		this.limit = limit;
+	}
+	public PageInfo<GuideRecordPojo> getResultList() {
+		return resultList;
+	}
+	public void setResultList(PageInfo<GuideRecordPojo> resultList) {
+		this.resultList = resultList;
 	}
 	
 	

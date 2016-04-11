@@ -38,46 +38,66 @@
 
 </insert>
 
-<!-- <select id="selectGuideRecord" resultType="" parameterType="HashMap">
+<select id="selectGuideRecord" resultType="com.daz.teacher.guideRecord.pojo.GuideRecordPojo" 
+parameterType="HashMap">
 		select
-		T1.MESSAGE_ID as messageId,
-		T1.TEXT as text,
-		T1.CREATE_TIME as createTime,
-		T1.LOOK_STATUS as lookStatus,
-		T1.SENT_STATUS as sentStatus,		
-		
-		T2.TEACHER_ID as messageTeacherId,
-		T2.TEACHER_NAME as messageTeacherName,
-		
-		T3.STUDENT_ID as messageStudentId,
-		T3.STUDENT_NAME as messageStudentName
-		
-		from MESSAGE T1 left join TEACHER_INFO T2
-		on T2.TEACHER_ID = T1.TEACHER_ID
-		left join STUDENTS T3
-		on T3.STUDENT_ID = T1.STUDENT_ID
+		RECORD_CODE as recordCode,
+		TEACHER_NAME as teacherName,
+		TEACHER_ID as teacherId,
+		ACADMY as acadmy,
+		PROFESSIONAL as professional,
+		GUIDE_TIME as guideTime,
+		CREATE_TIME as createTime,
+		GUIDE_TYPE as guideType,
+		STUDENT_NUMBER as studentNumber,
+		GUIDE_TITLE as guideTitle,
+		GUIDE_TEXT as guideText,
+		GUIDE_SUMMARY as guideSummary
+		from GUIDE_RECORD
 		<trim prefix="where" prefixOverrides="AND|OR">
 			<if test="teacherId != null">
-				and T1.TEACHER_ID=#{teacherId}
+				and TEACHER_ID=#{teacherId}
 			</if>
-			<if test="studentId != null">
-				and T1.STUDENT_ID=#{studentId} 
-			</if>
-			<if test="sentStatus != null">
-				and T1.SENT_STATUS=#{sentStatus}
-			</if>
-			<if test="lookStatus != null">
-				and T1.LOOK_STATUS=#{lookStatus}
+			<if test="recordCode != null">
+				and RECORD_CODE=#{recordCode} 
 			</if>
 		</trim>
-		order by T1.CREATE_TIME,T1.MESSAGE_ID
-</select> -->
- <!-- <update id="updateMessage" parameterType="HashMap">
-		update MESSAGE T1
+		order by CREATE_TIME
+</select>
+<delete id="deleteRecord" parameterType="HashMap">
+delete from GUIDE_RECORD 
+<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="teacherId != null">
+				and TEACHER_ID=#{teacherId}
+			</if>
+			<if test="recordCode != null">
+				and RECORD_CODE=#{recordCode} 
+			</if>
+		</trim>
+</delete>
+<update id="updateMessage" parameterType="com.daz.teacher.guideRecord.pojo.GuideRecordPojo">
+		update GUIDE_RECORD
 		<set>			
-				T1.LOOK_STATUS=1,		
+			<if test = "guideTime != null">
+			GUIDE_TIME=#{guideTime}
+			</if>	
+			<if test = "guideType != null">
+			GUIDE_TYPE=#{guideType}
+			</if>
+			<if test = "studentNumber != null">
+			STUDENT_NUMBER=#{studentNumber}
+			</if>	
+			<if test = "guideTitle != null">
+			GUIDE_TITLE=#{guideTitle}
+			</if>
+			<if test = "guideText != null">
+			GUIDE_TEXT=#{guideText}
+			</if>
+			<if test = "guideSummary != null">
+			GUIDE_SUMMARY=#{guideSummary}
+			</if>
 		</set>
-where T1.STUDENT_ID=#{studentId} and T1.TEACHER_ID=#{teacherId} and T1.LOOK_STATUS=0 and T1.SENT_STATUS=2
-</update> -->
+		WHERE GUIDE_CODE=#{guideCode}
+</update>
 
 </mapper>

@@ -25,6 +25,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
     <script type="text/javascript" src="js/teacher/NewRecord.js"></script>
     <script type="text/javascript" src="js/teacher/Main.js"></script>
     <script type="text/javascript" src="js/teacher/changepassword.js"></script>
+    <script type="text/javascript" src="js/teacher/recordHistory.js"></script>
    	<script type="text/javascript" src="<%=path%>/dwr/engine.js"></script>
 	<script type="text/javascript" src="<%=path%>/dwr/util.js"></script>
 	<script type="text/javascript" src="<%=path%>/dwr/interface/teacherPush.js"></script>

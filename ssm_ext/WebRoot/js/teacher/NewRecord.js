@@ -1,4 +1,5 @@
-NewRecord = function(){
+NewRecord = function(type){
+	Ext.Msg.alert(type);
 	var recordPanel = Ext.create('Ext.Panel',{
 			id:'record',
 		 	frame: true,		 

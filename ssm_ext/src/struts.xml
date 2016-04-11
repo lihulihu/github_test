@@ -154,11 +154,18 @@
 	</result>	
 </action>
 
+<action name="selectGuideRecodeAction" class="com.daz.teacher.guideRecord.action.GuideRecordAction" method="selectAllRecord">
+	<result name="success" type="json">
+			<param name="includeProperties">resultList.*,success</param>
+	</result>	
+</action>
+<!-- 指导记录Action -->
+
 <action name="teacherTreeAction" class="com.daz.teacher.teacherInfo.action.TeacherTreeAction" method="selectTeacherTree">
 	<result name="success" type="json">
 	<param name="includeProperties">nodeList.*</param></result>
  </action>
-<!-- 指导记录Action -->
+
 
 <!-- teacher -->
 
