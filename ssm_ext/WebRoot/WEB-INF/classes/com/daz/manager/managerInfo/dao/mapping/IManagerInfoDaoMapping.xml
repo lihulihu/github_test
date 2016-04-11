@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.manager.managerInfo.dao.IManagerInfoDao">
+
+<select id="getManager" resultType="com.daz.manager.managerInfo.pojo.ManagerPojo" parameterType="HashMap">
+		select
+		T1.MANAGER_ID as managerId,
+		T1.MANAGER_PASSWORD as managerPassword,
+		T1.MANAGER_ACCOUNT as managerAccount,
+		T1.MANAGER_LEVEL as managerLevel	
+		from MANAGER T1
+		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+			<if test="null != managerAccount">
+			and T1.MANAGER_ACCOUNT=#{managerAccount}
+			</if>
+			<if test="null != managerPassword">
+			and T1.MANAGER_PASSWORD=#{managerPassword}
+			</if>
+			<if test="null != managerId">
+			and T1.MANAGER_ID=#{managerId}
+			</if>
+			<if test="null != managerLevel">
+			and T1.MANAGER_LEVEL=#{managerLevel}
+			</if>
+		</trim>
+</select>
+
+</mapper>

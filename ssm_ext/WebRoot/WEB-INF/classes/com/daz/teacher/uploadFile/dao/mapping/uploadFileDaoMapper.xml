@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.teacher.uploadFile.dao.iUploadFileDao">
+
+<!-- 按条件获取菜单 -->
+<select id="getFileList" resultType="com.daz.teacher.uploadFile.pojo.uploadFilePojo" parameterType="HashMap">
+		select
+		T1.FILEID as fileId,
+		T1.FILENAME as fileName,
+		T1.UPLOADTIME as uploadTime,
+		T1.DOWNLOADNUMBER as downloadNumber,
+		T1.TEACHERID as teacherId,	
+		T1.FILEPATH as filePath
+		from UPLOADFILE T1
+		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+		<if test="null != teacherId">
+			and T1.TEACHERID=#{teacherId}
+		</if>
+		<if test="null != fileId">
+			and T1.FILEID=#{fileId}
+		</if>
+		</trim>
+		order by T1.UPLOADTIME
+</select>
+
+
+<!-- 新增菜单 -->
+<insert id="addFile" parameterType="com.daz.teacher.uploadFile.pojo.uploadFilePojo">
+<selectKey resultType="String" order="BEFORE" keyProperty="fileId">
+		select SEQ_UPLOADFILE.Nextval from dual
+	</selectKey>
+		insert into UPLOADFILE(
+		FILEID,
+		FILENAME,
+		UPLOADTIME,
+		DOWNLOADNUMBER,
+		TEACHERID,
+		FILEPATH
+		)values(
+		#{fileId},
+		#{fileName},
+		sysdate,
+		0,
+		#{teacherId},
+		#{filePath}
+		)
+</insert>
+
+<update id="updateFile" parameterType="com.daz.teacher.uploadFile.pojo.uploadFilePojo">
+	update UPLOADFILE T1
+	<set>
+		T1.DOWNLOADNUMBER=T1.DOWNLOADNUMBER+1
+	</set>
+	where T1.FILEID=#{fileId}
+</update>
+<!-- 删除菜单 -->
+<delete id="deleteFile" parameterType="Map">
+		delete from UPLOADFILE
+		where FILEID=#{fileId}
+</delete>
+</mapper>

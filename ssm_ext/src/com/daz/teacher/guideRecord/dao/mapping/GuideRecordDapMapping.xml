@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.teacher.guideRecord.dao.IGuideRecordDao">
+
+<insert id="insertGuideRecord" parameterType="com.daz.teacher.guideRecord.pojo.GuideRecordPojo">
+	<selectKey resultType="String" order="BEFORE" keyProperty="recordCode">
+		select SEQ_GUIDE_RECORD.Nextval from dual
+	</selectKey>
+	insert into GUIDE_RECORD(
+	RECORD_CODE,
+	TEACHER_NAME,
+	TEACHER_ID,
+	ACADMY,
+	PROFESSIONAL,
+	GUIDE_TIME,
+	CREATE_TIME,
+	GUIDE_TYPE,
+	STUDENT_NUMBER,
+	GUIDE_TITLE,
+	GUIDE_TEXT,
+	GUIDE_SUMMARY
+	)
+	values(
+	#{recordCode},
+	#{teacherName},
+	#{teacherId},
+	#{acadmy},
+	#{professional},
+	#{guideTime},
+	sysdate,
+	#{guideType},
+	#{studentNumber},
+	#{guideTitle},
+	#{guideText},
+	#{guideSummary}
+	)
+
+</insert>
+
+<!-- <select id="selectGuideRecord" resultType="" parameterType="HashMap">
+		select
+		T1.MESSAGE_ID as messageId,
+		T1.TEXT as text,
+		T1.CREATE_TIME as createTime,
+		T1.LOOK_STATUS as lookStatus,
+		T1.SENT_STATUS as sentStatus,		
+		
+		T2.TEACHER_ID as messageTeacherId,
+		T2.TEACHER_NAME as messageTeacherName,
+		
+		T3.STUDENT_ID as messageStudentId,
+		T3.STUDENT_NAME as messageStudentName
+		
+		from MESSAGE T1 left join TEACHER_INFO T2
+		on T2.TEACHER_ID = T1.TEACHER_ID
+		left join STUDENTS T3
+		on T3.STUDENT_ID = T1.STUDENT_ID
+		<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="teacherId != null">
+				and T1.TEACHER_ID=#{teacherId}
+			</if>
+			<if test="studentId != null">
+				and T1.STUDENT_ID=#{studentId} 
+			</if>
+			<if test="sentStatus != null">
+				and T1.SENT_STATUS=#{sentStatus}
+			</if>
+			<if test="lookStatus != null">
+				and T1.LOOK_STATUS=#{lookStatus}
+			</if>
+		</trim>
+		order by T1.CREATE_TIME,T1.MESSAGE_ID
+</select> -->
+ <!-- <update id="updateMessage" parameterType="HashMap">
+		update MESSAGE T1
+		<set>			
+				T1.LOOK_STATUS=1,		
+		</set>
+where T1.STUDENT_ID=#{studentId} and T1.TEACHER_ID=#{teacherId} and T1.LOOK_STATUS=0 and T1.SENT_STATUS=2
+</update> -->
+
+</mapper>

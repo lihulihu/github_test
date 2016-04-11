@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1//EN" "http://struts.apache.org/dtds/struts-2.1.dtd">
+<struts>
+<!-- 定义一个拦截器 -->  
+<package name="struts-my" namespace="/p1" extends="struts-default">
+ <interceptors>  
+            <interceptor name="authority"  
+                class="com.daz.common.filer.Interceptor">  
+            </interceptor>  
+            <!-- 拦截器栈 -->  
+            <interceptor-stack name="mydefault">  
+                <interceptor-ref name="defaultStack" />  
+                <interceptor-ref name="authority" />  
+            </interceptor-stack>  
+</interceptors>
+<default-interceptor-ref name="mydefault" />
+<global-results>  
+            <result name="login">/login.jsp</result>  
+</global-results>
+</package>
+
+<package name="default" namespace="/" extends="struts-default,json-default,struts-my">
+<!-- teacher -->
+<action name="teacherLoginAction" class="com.daz.teacher.teacherInfo.action.teacherAction" method="login">
+			<result name="success" type="json">
+			<param name="includeProperties">success,meg</param>
+			</result>
+			<result name="failed" type="json">
+			<param name="includeProperties">success,meg</param>
+			</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+</action>
+  
+<action name="searchAllTeacherAction" class="com.daz.teacher.teacherInfo.action.teacherAction" method="searchAllTeacher">
+			<result name="success" type="json">
+			<param name="includeProperties">resultList.*</param>
+			</result>
+</action>  
+  
+ <action name="logoutAction" class="com.daz.teacher.teacherInfo.action.teacherAction" method="logout">
+			<result name="success">/login.jsp</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+</action> 
+<action name="searchTeacherAction" class="com.daz.teacher.teacherInfo.action.teacherAction" method="searchTeacherInfo">
+			<result name="success" type="json">
+			<param name="includeProperties">list.*</param>
+			</result>
+			<result name="failed" type="json"></result>
+</action>
+
+<action name="searchTeacherByNameAction" class="com.daz.teacher.teacherInfo.action.teacherAction" method="searchTeacherByName">
+			<result name="success" type="json">
+			<param name="includeProperties">isOk,success</param>
+			</result>			
+</action>
+
+<action name="updateTeacherInfoAction" class="com.daz.teacher.teacherInfo.action.teacherAction" method="updateTeacherInfo">
+			<result name="success" type="json">
+			
+			</result>
+			<result name="failed" type="json"></result>
+</action>
+
+<action name="indexAction" class="com.daz.teacher.index.IndexAction" method="Index">
+	<result name="success">WEB-INF/jsp/index.jsp</result>
+</action>
+
+<action name="treeNodeAction" class="com.daz.teacher.menuTree.action.treeNodeAction" method="Tree">
+	<result name="success" type="json">
+	<param name="includeProperties">nodeList.*</param></result>
+ </action>
+ <action name="leaveMessageAction" class="com.daz.teacher.leaveMessage.action.LeaveMessageAction" method="searchLeaveMessage">
+	<result name="success" type="json">
+	<param name="includeProperties">result</param>
+	</result>	
+</action> 
+ <action name="submitleaveMessageAction" class="com.daz.teacher.leaveMessage.action.LeaveMessageAction" method="submitLeaveMessage">
+	<result name="success" type="json">
+	<!-- <param name="includeProperties"></param> -->
+	</result>	
+</action> 
+<action name="searchNotLookMessageAction" class="com.daz.teacher.leaveMessage.action.LeaveMessageAction" method="searchNotLookMessage">
+	<result name="success" type="json">
+ 	<param name="includeProperties">size,success</param>
+	</result>	
+</action> 
+<action name="searchIdAction" class="com.daz.teacher.leaveMessage.action.LeaveMessageAction" method="searchId">
+	<result name="success" type="json">
+ 	<param name="includeProperties">studentId,result</param>
+	</result>	
+</action>
+
+ 
+
+
+<action name="*_FileAction" class="com.daz.teacher.uploadFile.action.UploadFileAction" method="{1}">
+	<result name="success" type="json">
+		<param name="includeProperties">fileList.*,message,success</param>
+	</result>	
+	<result name="failed" type="json">
+	<param name="includeProperties">fileList.*,message,success</param>
+	</result>
+</action>
+
+<action name="uploadPhotoAction" class="com.daz.teacher.uploadFile.action.UploadFileAction" method="uploadPhoto">
+	<result name="success" type="json">
+		<param name="includeProperties">message,success,path</param>
+	</result>	
+	<result name="failed" type="json">
+	<param name="includeProperties">message,success,path</param>
+	</result>
+</action>
+
+<action name="deletePhotoAction" class="com.daz.teacher.uploadFile.action.UploadFileAction" method="deletePhoto">
+	<result name="success" type="json">
+		<param name="includeProperties">message,success</param>
+	</result>	
+	<result name="failed" type="json">
+	<param name="includeProperties">message,success</param>
+	</result>
+</action>
+
+<action name="downloadFileAction" class="com.daz.teacher.uploadFile.action.UploadFileAction" method="downLoad">
+	<result name="success" type="stream">
+	<param name="contentType">application/txt</param>  
+               <param name="contentDisposition">attachment;fileName="${uploadFileName}"</param> 
+               <param name="inputName">downloadFile</param>  
+               <param name="bufferSize">1024</param>	
+	</result>	
+</action>
+
+<action name="publicDictAction" class="com.daz.common.publicDict.action.PublicDictAction" method="searchPublicDict">
+	<result name="success" type="json">
+	<param name="includeProperties">list.*</param>
+	</result>	
+</action> 
+
+<action name="changePasswordAction" class="com.daz.teacher.action.ChangePasswordAction" method="passwordController">
+	<result name="success" type="json">
+			<param name="includeProperties">success,msg</param>
+			</result>
+			<result name="failed" type="json">
+			<param name="includeProperties">success,msg</param>
+	</result>	
+</action>
+
+<!-- 指导记录Action -->
+<action name="addGuideRecodeAction" class="com.daz.teacher.guideRecord.action.GuideRecordAction" method="addGuideRecord">
+	<result name="success" type="json">
+			<param name="includeProperties">success</param>
+			</result>
+			<result name="error" type="json">
+			<param name="includeProperties">success</param>
+	</result>	
+</action>
+
+<action name="teacherTreeAction" class="com.daz.teacher.teacherInfo.action.TeacherTreeAction" method="selectTeacherTree">
+	<result name="success" type="json">
+	<param name="includeProperties">nodeList.*</param></result>
+ </action>
+<!-- 指导记录Action -->
+
+<!-- teacher -->
+
+<!-- student -->
+<action name="searchStudentByTeacherIdAction" class="com.daz.student.action.StudentAction" method="searchStudentByTeacherId">
+	<result name="success" type="json">
+			<param name="includeProperties">success,resultList.*</param>
+			</result>
+	<result name="error" type="json">
+			<param name="includeProperties">success,resultList.*</param>
+	</result>	
+</action>
+<action name="searchStudentIsNotSelectAction" class="com.daz.student.action.StudentAction" method="searchStudentIsNotSelect">
+	<result name="success" type="json">
+			<param name="includeProperties">result.*</param>
+			</result>	
+</action>
+
+<action name="searchStudentAction" class="com.daz.student.action.StudentAction" method="searchStudent">
+	<result name="success" type="json">
+			<param name="includeProperties">success,list.*</param>
+			</result>
+	<result name="error" type="json">
+			<param name="includeProperties">success,list.*</param>
+	</result>	
+</action>
+<!-- student -->
+<!-- manager -->
+<action name="managerLoginAction" class="com.daz.manager.managerInfo.action.ManagerAction" method="managerLogin">
+			<result name="success" type="json">
+			<param name="includeProperties">success,msg</param>
+			</result>
+			<result name="failed" type="json">
+			<param name="includeProperties">success,msg</param>
+			</result>
+			<interceptor-ref name="defaultStack"></interceptor-ref>
+</action>
+<action name="managerIndexAction" class="com.daz.manager.managerInfo.action.ManagerIndex" method="Index">
+	<result name="success">WEB-INF/jsp/managerIndex.jsp</result>
+</action>
+<action name="saveTeacherRelStudentAction" class="com.daz.manager.teacherRelStudent.action.TeacherRelStudentAction" method="saveTeacherRelStudent">
+	<result name="success" type="json">
+			<param name="includeProperties">success</param>
+	</result>
+</action>
+
+<action name="selectNumberAction" class="com.daz.manager.teacherRelStudent.action.TeacherRelStudentAction" method="selectNumber">
+	<result name="success" type="json">
+			<param name="includeProperties">teacherSize,studentSize</param>
+	</result>
+</action>
+
+<action name="autoCorrelationAction" class="com.daz.manager.teacherRelStudent.action.TeacherRelStudentAction" method="autoCorrelation">
+	<result name="success" type="json">
+			<param name="includeProperties">teacherSize,studentSize,success</param>
+	</result>
+</action>
+
+<action name="alterTeachersAction" class="com.daz.manager.teacherRelStudent.action.TeacherManageAction" method="updateTeachers">
+	<result name="success" type="json">
+			<param name="includeProperties">success</param>
+	</result>
+</action>
+
+<action name="deleteTeachersAction" class="com.daz.manager.teacherRelStudent.action.TeacherManageAction" method="deleteTeachers">
+	<result name="success" type="json">
+			<param name="includeProperties">success</param>
+	</result>
+</action>
+
+<action name="importTeacherAction" class="com.daz.manager.excel.action.TeacherExcel" method="importTeacher">
+	<result name="success" type="json">
+			<param name="includeProperties">success,num</param>
+	</result>
+</action>
+
+<action name="exportTeacherAction" class="com.daz.manager.excel.action.TeacherExcel" method="downLoad">
+	<result name="success" type="stream">
+	<param name="contentType">application/txt</param>  
+               <param name="contentDisposition">attachment;fileName="${uploadFileName}"</param> 
+               <param name="inputName">inputStream</param>  
+               <param name="bufferSize">1024</param>	
+	</result>	
+</action>
+
+<!-- manager -->
+<!-- common -->
+<action name="announcementAction" class="com.daz.common.announcement.action.announcementAction" method="Announcement">
+	<result name="success" type="json"></result>	
+</action> 
+
+<action name="addOrUpdateAnnouncementAction" class="com.daz.common.announcement.action.announcementAction" method="addOrUpdateAnnouncement">
+	<result name="success" type="json">
+	<param name="includeProperties">success</param>
+	</result>	
+</action> 
+
+<action name="delAnnouncementAction" class="com.daz.common.announcement.action.announcementAction" method="delAnnouncement">
+	<result name="success" type="json">
+	<param name="includeProperties">success</param>
+	</result>	
+</action>
+
+<action name="announcementPhotoAction" class="com.daz.common.announcement.action.announcementAction" method="uploadPhotoForM">
+	<result name="success" type="json">
+	<param name="includeProperties">success,path,photoWidth,photoHeight</param>
+	</result>	
+</action>
+<!-- common -->
+</package>
+</struts>    

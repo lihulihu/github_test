@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.teacher.teacherInfo.dao.iTeacherDao">
+
+<resultMap type="com.daz.teacher.teacherInfo.pojo.teacher" id="techaerResultMap">
+	<id column="teacherId" property="teacherId"/>
+	<result column="teacherName" property="teacherName"/>
+	<result column="phone" property="phone"/>
+	<result column="email" property="email"/>
+	<result column="account" property="account"/>
+	<result column="password" property="password"/>
+	<result column="lastTime" property="lastTime"/>
+	<result column="createTime" property="createTime"/>
+	<result column="photo" property="photo"/>
+	<result column="synopsis" property="synopsis"/>
+	<result column="age" property="age"/>
+	<result column="sex" property="sex"/>
+	<result column="finishSchool" property="finishSchool"/>
+	<association property="job" column="JOB" javaType="com.daz.common.publicDict.pojo.publicDictPojo">
+		<result column="jobValueId" property="valueId"/> 
+  		<result column="jobValueName" property="valueName"/>
+	</association>
+	<association property="political" column="POLITICAL" javaType="com.daz.common.publicDict.pojo.publicDictPojo">
+		<result column="politicalValueId" property="valueId"/> 
+  		<result column="politicalValueName" property="valueName"/>
+	</association>
+	<association property="academy" column="ACADEMY" javaType="com.daz.common.publicDict.pojo.publicDictPojo">
+		<result column="academyValueId" property="valueId"/> 
+  		<result column="academyValueName" property="valueName"/>
+	</association>
+	<association property="professional" column="PROFESSIONAL" javaType="com.daz.common.publicDict.pojo.publicDictPojo">
+		<result column="professionalValueId" property="valueId"/> 
+  		<result column="professionalValueName" property="valueName"/>
+	</association>
+</resultMap>
+<select id="getTeacher" resultMap="techaerResultMap" parameterType="HashMap">
+		select
+		T1.TEACHER_ID as teacherId,
+		T1.TEACHER_NAME as teacherName,
+		T1.PHONE as phone,
+		T1.EMAIL as email,
+		T1.ACCOUNT as account,	
+		T1.PASSWORD as password,
+		T1.LASTTIME as lastTime,
+		T1.CREATETIME as createTime,		
+		T1.PHOTO as photo,
+		T1.SYNOPSIS as synopsis,
+		T1.AGE as age,
+		T1.SEX as sex,
+		T1.FINISH_SCHOOL as finishSchool,
+		T2.VALUE_ID as jobValueId,
+		T2.VALUE_NAME as jobValueName,
+		T3.VALUE_ID as politicalValueId,
+		T3.VALUE_NAME as politicalValueName,
+		T4.VALUE_ID as academyValueId,
+		T4.VALUE_NAME as academyValueName,
+		T5.VALUE_ID as professionalValueId,
+		T5.VALUE_NAME as professionalValueName
+		
+		
+		from TEACHER_INFO T1 left join PUBLIC_DICT T2
+		on T2.PUBLIC_CODE='teacher job' and T1.JOB=T2.VALUE_ID
+		left join PUBLIC_DICT T3
+		on T3.PUBLIC_CODE='political status' and T1.POLITICAL=T3.VALUE_ID
+		left join PUBLIC_DICT T4
+		on T4.PUBLIC_CODE='academy' and T1.ACADEMY=T4.VALUE_ID
+		left join PUBLIC_DICT T5
+		on T5.PUBLIC_CODE='professional' and T1.PROFESSIONAL=T5.VALUE_ID
+		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+			<if test="null != account">
+			and T1.ACCOUNT=#{account}
+			</if>
+			<if test="null != password">
+			and T1.PASSWORD=#{password}
+			</if>
+			<if test="null != teacherId">
+			and T1.TEACHER_ID=#{teacherId}
+			</if>
+			<if test="null != teacherName">
+			and T1.TEACHER_NAME=#{teacherName}
+			</if>
+			<if test="null != job and job.valueId != null">
+			and T1.JOB=#{job.valueId}
+			</if>
+			<if test = "query != null and query != ''">
+			and(
+			instr(upper(T1.ACCOUNT), upper(#{query})) > 0	
+			or instr(upper(T1.TEACHER_NAME),upper(#{query})) > 0)
+		</if>
+		</trim>
+		order by T1.TEACHER_ID
+</select>
+
+<update id="updateTeacher" parameterType="com.daz.teacher.teacherInfo.pojo.teacher">
+update TEACHER_INFO T1
+	<set>
+		<if test="teacherName != null">
+			T1.TEACHER_NAME=#{teacherName},
+		</if>
+		<if test="phone != null">
+			T1.PHONE=#{phone},
+		</if>
+		<if test="email != null">
+			T1.EMAIL=#{email},
+		</if>
+		<if test="lastTime != null">
+			T1.LASTTIME=#{lastTime},
+		</if>
+		<if test="password != null">
+			T1.PASSWORD=#{password},
+		</if>
+		<if test="job != null and job.valueId != null">
+			T1.JOB=#{job.valueId},
+		</if>
+		<if test="photo != null">
+			T1.PHOTO=#{photo},
+		</if>
+		<if test="political != null and political.valueId != null">
+			T1.POLITICAL=#{political.valueId},
+		</if>
+		<if test="synopsis != null">
+			T1.SYNOPSIS=#{synopsis},
+		</if>
+		<if test="age != null">
+			T1.AGE=#{age},
+		</if>
+		<if test="sex != null">
+			T1.SEX=#{sex},
+		</if>
+		<if test="finishSchool != null">
+			T1.FINISH_SCHOOL=#{finishSchool},
+		</if>
+		<if test="academy != null and academy.valueId != null">
+			T1.ACADEMY=#{academy.valueId},
+		</if>
+		<if test="professional != null and professional.valueId != null">
+			T1.PROFESSIONAL=#{professional.valueId},
+		</if>
+	</set>
+	where T1.TEACHER_ID=#{teacherId}
+</update>
+<insert id="addTeacherBatch" parameterType="java.util.List">
+insert into TEACHER_INFO
+	(
+		TEACHER_ID,
+		TEACHER_NAME,
+		ACCOUNT,
+		PASSWORD,
+		CREATETIME,
+		JOB,
+		POLITICAL,
+		ACADEMY
+	)
+	select
+			SEQ_TEACHER_INFO.Nextval as TEACHER_ID,
+			T.TEACHER_NAME,
+			T.ACCOUNT,
+			T.PASSWORD,
+			T.CREATETIME,
+			T.JOB,
+			T.POLITICAL,
+			T.ACADEMY
+	from
+	(
+		<foreach collection="list" item="item" index="index" separator="union all">
+				SELECT 
+					#{item.teacherName} as TEACHER_NAME,
+					#{item.account} as ACCOUNT,
+					#{item.password} as PASSWORD,
+					sysdate as CREATETIME,
+					#{item.job} as JOB,
+					#{item.political} as POLITICAL,
+					#{item.academy} as ACADEMY
+ 				FROM DUAL
+  		</foreach>
+	)T
+</insert>
+
+<update id="updateTeacherBatch" parameterType="java.util.List">
+    begin  
+        <foreach collection="list" item="item" index="index" separator=";" > 
+            update TEACHER_INFO 
+            <set>
+            <if test="item.teacherName!=null and item.teacherName!=''">
+                TEACHER_NAME = #{item.teacherName},
+            </if>
+            
+            <if test="item.account!=null and item.account!=''">
+                ACCOUNT = #{item.account},
+            </if>
+
+            <if test="item.password!=null and item.password!=''">
+                PASSWORD = #{item.password},
+            </if>
+            
+			<if test="item.job!=null and item.job!=''">
+                JOB = #{item.job},
+            </if>
+            
+            <if test="item.political!=null and item.political!=''">
+                POLITICAL = #{item.political},
+            </if>
+            
+            <if test="item.academy!=null and item.academy!=''">
+                ACADEMY = #{item.academy},
+            </if>
+            </set>
+            where TEACHER_ID= #{item.teacherId}
+            </foreach>
+        ;end;
+    </update>
+<delete id ="deleteTeacherBatch" parameterType="java.util.List">
+	delete from TEACHER_INFO
+  <where>
+  <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">     
+		TEACHER_ID=#{item}
+    </foreach>
+  </where>
+</delete>
+</mapper>

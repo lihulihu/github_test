@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.common.publicDict.dao.IPublicDictDao">
+
+<select id="searchPublicDict" resultType="com.daz.common.publicDict.pojo.publicDictPojo" parameterType="HashMap">
+		select
+		T1.PUBLIC_ID as publicId,
+		T1.PUBLIC_NAME as publicName,
+		T1.VALUE_ID as valueId,
+		T1.VALUE_NAME as valueName,
+		T1.PUBLIC_CODE as publicCode
+		from PUBLIC_DICT T1
+		<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="publicCode != null">
+				and T1.PUBLIC_CODE=#{publicCode}
+			</if>
+		</trim>
+		order by valueId
+</select>
+<select id="searchOnePublicDict" resultType="com.daz.common.publicDict.pojo.publicDictPojo" parameterType="HashMap">
+		select
+		T1.PUBLIC_ID as publicId,
+		T1.PUBLIC_NAME as publicName,
+		T1.VALUE_ID as valueId,
+		T1.VALUE_NAME as valueName,
+		T1.PUBLIC_CODE as publicCode
+		from PUBLIC_DICT T1
+		<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="publicCode != null">
+				and T1.PUBLIC_CODE=#{publicCode}
+			</if>
+			<if test="valueId != null">
+				and T1.VALUE_ID=#{valueId}
+			</if>
+			<if test="valueName != null">
+				and T1.VALUE_NAME=#{valueName}
+			</if>
+		</trim>
+		order by valueId
+</select>
+ <!-- 新增公告信息 -->
+<!--  
+<insert id="addAnnouncement" parameterType="com.daz.common.announcement.pojo.Announcement">
+	<selectKey resultType="String" order="BEFORE" keyProperty="id">
+		select SEQ_ANNOUNCEMENT.Nextval from dual
+	</selectKey> >
+		insert into ANNOUNCEMENT(
+		ID,
+		TITLE,
+		TEXT,
+		INPUT_DATE
+		)values(
+		#{id},
+		#{title},
+		#{text},
+		sysdate
+		)
+</insert>
+
+
+<update id="updateAnnoumcement" parameterType="com.daz.common.announcement.pojo.Announcement">
+		update ANNOUNCEMENT
+		<set>
+		<if test="null != title">
+			TITLE=#{title},
+		</if>
+		<if test="null != text">
+			TEXT=#{text},
+		</if>
+		sysdate
+		</set>
+		where ID=#{id}
+</update>
+
+<delete id="deleteAnnouncement" parameterType="Map">
+		delete from ANNOUNCEMENT
+		where ID=#{id}
+</delete>  -->
+</mapper>

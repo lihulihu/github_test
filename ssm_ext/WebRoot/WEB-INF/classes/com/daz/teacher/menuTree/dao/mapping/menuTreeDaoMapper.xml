@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.teacher.menuTree.dao.iMenuTreeDao">
+
+<!-- 按条件获取菜单 -->
+<select id="getMenuTreeList" resultType="com.daz.teacher.menuTree.pojo.menuTreePojo" parameterType="HashMap">
+		select
+		T1.TREEID as id,
+		T1.TREETEXT as text,
+		T1.TREELEAF as leaf,
+		T1.TREEPARENT as parent,
+		T1.ICONCLS as iconCls,	
+		T1.IDENTITY as idenTity
+		from MENUTREE T1
+		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+		<if test="null != idenTity">
+			and T1.IDENTITY=#{idenTity}
+		</if>
+		<if test="null != treeParent">
+			and T1.TREEPARENT=#{treeParent}
+		</if>
+		</trim>
+		order by T1.TREEID
+</select>
+
+<update id="updateMenuTree" parameterType="com.daz.teacher.menuTree.pojo.menuTreePojo">
+		update MENUTREE T1
+		<set>
+			<if test="null != text">
+			T1.TREETEXT=#{text},
+			</if>
+			<if test="null != leaf">
+			T1.TREELEAF=#{leaf},
+			</if>
+			<if test="null != parent">
+			T1.TREEPARENT=#{parent},
+			</if>
+			<if test="null != iconCls">
+			T1.ICONCLS=#{iconCls},
+			</if>
+			<if test="null != idenTity">
+			T1.IDENTITY=#{idenTity},
+			</if>
+		</set>
+		where T1.TREEID=#{id}
+</update>
+<!-- 新增菜单 -->
+<insert id="addMenuTree" parameterType="com.daz.teacher.menuTree.pojo.menuTreePojo">
+<selectKey resultType="int" order="BEFORE" keyProperty="id">
+		select SEQ_MENUTREE.Nextval from dual
+	</selectKey>
+		insert into MENUTREE(
+		TREEID,
+		TREETEXT,
+		TREELEAF,
+		TREEPARENT,
+		ICONCLS,
+		IDENTITY
+		)values(
+		#{id},
+		#{text},
+		#{leaf},
+		#{parent},
+		#{iconCls},
+		#{idenTity}
+		)
+</insert>
+
+<!-- 删除菜单 -->
+<delete id="deleteMenuTree" parameterType="Map">
+		delete from MENUTREE
+		where TREEID=#{id}
+</delete>
+</mapper>

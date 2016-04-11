@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.student.dao.IStudentDao">
+
+<resultMap type="com.daz.student.pojo.studentPojo" id="studentResultMap">
+  <id column="ID" property="id" />
+  <result column="STUDENT_ID" property="studentId" />
+  <result column="STUDENT_NAME" property="studentName" />
+  <result column="GRADE" property="grade" />
+  <result column="REMARK" property="remark" />
+  <result column="PASSWORD" property="password" />
+  <result column="INCLASS" property="inclass" />
+  <result column="PHOTO" property="photo" />
+  <result column="PHONE" property="phone" />
+  <result column="EMAIL" property="email" />
+  <result column="SEX" property="sex" />
+  <result column="AGO" property="ago" />
+  <result column="ACADEMY" property="academy" />
+  <result column="PROFESSIONAL" property="professional" />
+</resultMap>
+<select id="searchStudentList" resultMap="studentResultMap" parameterType="HashMap">
+		select
+		T1.ID,
+		T1.STUDENT_ID,
+		T1.STUDENT_NAME,
+		T1.GRADE,
+		T1.REMARK,
+		T1.PASSWORD,
+		T1.INCLASS,
+		T1.PHOTO,
+		T1.PHONE,
+		T1.EMAIL,
+		T1.SEX,
+		T1.AGO,
+		T1.ACADEMY,
+		T1.PROFESSIONAL
+		from STUDENTS T1
+		left join TEACHER_REL_STUDENT T2
+		on T2.STUDENT_ID=T1.STUDENT_ID
+		
+		<trim prefix="WHERE" prefixOverrides="AND|OR ">
+			T2.TEACHER_ID=#{teacherId}
+			<if test="studentId != null">
+				and T1.STUDENT_ID=#{studentId}
+			</if>
+			<if test="password != null">
+				and T1.PASSWORD=#{password}
+			</if>
+		</trim>
+</select>
+<select id="searchStudentByTeacherId" resultMap="studentResultMap" parameterType="HashMap">
+	select
+		T1.ID,
+		T1.STUDENT_ID,
+		T1.STUDENT_NAME,
+		T1.GRADE,
+		T1.REMARK,
+		T1.PASSWORD,
+		T1.INCLASS,
+		T1.PHOTO,
+		T1.PHONE,
+		T1.EMAIL,
+		T1.SEX,
+		T1.AGO,
+		T1.ACADEMY,
+		T1.PROFESSIONAL
+		from STUDENTS T1
+		left join TEACHER_REL_STUDENT T2
+		on T2.STUDENT_ID=T1.STUDENT_ID
+		where T2.TEACHER_ID=#{teacherId}
+		<if test = "query != null and query != ''">
+		and(
+			instr(upper(T1.STUDENT_ID), upper(#{query})) > 0	
+			or instr(upper(T1.STUDENT_NAME),upper(#{query})) > 0)
+		</if>
+		<if test="grade != null">
+		and T1.GRADE=#{grade}
+		</if>
+</select>
+<select id="searchStudentIsNotSelect" resultType="com.daz.student.pojo.studentPojo" parameterType="HashMap">
+	(select T1.STUDENT_ID as studentId,
+	T1.STUDENT_NAME as studentName 
+	from STUDENTS T1 where 
+	<if test="grade!=null">
+		T1.GRADE=#{grade} and
+	</if>
+	<if test="query!=null">
+		(
+			instr(upper(T1.STUDENT_ID), upper(#{query})) > 0	
+			or instr(upper(T1.STUDENT_NAME),upper(#{query})) > 0
+		) and
+	</if>
+	
+	not exists 
+	(
+	select T2.STUDENT_ID from TEACHER_REL_STUDENT T2 
+	where T1.STUDENT_ID=T2.STUDENT_ID
+	))order by t1.student_id
+</select>
+</mapper>

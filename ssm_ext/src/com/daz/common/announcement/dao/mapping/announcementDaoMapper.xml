@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.common.announcement.dao.IAnnouncementDao">
+
+<select id="searchAnnouncements" resultType="com.daz.common.announcement.pojo.Announcement" parameterType="HashMap">
+		select
+		T1.ID as id,
+		T1.TITLE as title,
+		T1.TEXT as text,
+		T1.ABSTRACTS as abstracts,
+		T1.INPUT_DATE as inputDate
+		from ANNOUNCEMENT T1
+		<trim prefix="where" prefixOverrides="AND|OR">
+			<if test="id != null">
+				and T1.ID=#{id}
+			</if>
+		</trim>
+		order by T1.INPUT_DATE DESC
+</select>
+<!-- 新增公告信息 -->
+<insert id="addAnnouncement" parameterType="com.daz.common.announcement.pojo.Announcement">
+	<selectKey resultType="String" order="BEFORE" keyProperty="id">
+		select SEQ_ANNOUNCEMENT.Nextval from dual
+	</selectKey> 
+		insert into ANNOUNCEMENT T1(
+		T1.ID,
+		T1.TITLE,
+		T1.INPUT_DATE,
+		T1.ABSTRACTS,
+		T1.TEXT
+		)
+		values
+		(
+		#{id},
+		#{title},
+		sysdate,
+		#{abstracts},
+		#{text,jdbcType=CLOB}
+		)
+</insert>
+
+<!-- 更新公告信息 -->
+<update id="updateAnnoumcement" parameterType="com.daz.common.announcement.pojo.Announcement">
+		update ANNOUNCEMENT
+		<set>
+		<if test="null != title">
+			TITLE=#{title},
+		</if>
+		<if test="null != text">
+			TEXT=#{text,jdbcType=CLOB},
+		</if>
+			INPUT_DATE=sysdate,
+		<if test="abstracts != null">
+			ABSTRACTS=#{abstracts}
+		</if>
+		</set>
+		where ID=#{id}
+</update>
+
+<!-- 删除公告信息 -->
+<delete id="deleteAnnouncement" parameterType="java.util.List">
+		delete from ANNOUNCEMENT
+		<where>
+  <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">     
+		ID=#{item}
+    </foreach>
+  </where>
+</delete>
+</mapper>

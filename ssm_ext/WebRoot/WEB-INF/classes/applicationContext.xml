@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:cache="http://www.springframework.org/schema/cache" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd 
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+	
+	<context:property-placeholder location="classpath:oracle.properties"/>
+    <!--spring 注解扫描基础包配置 -->
+    <context:component-scan base-package="com.daz">
+    </context:component-scan>
+
+    <bean id="txManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="oracleJdbcDataSource"/>
+    </bean>
+    <bean id="remote" class="com.daz.common.dwr.teacherPush"> </bean>
+    <aop:aspectj-autoproxy expose-proxy="true" proxy-target-class="true"/>
+
+    <tx:advice id="txAdvice" transaction-manager="txManager">
+        <tx:attributes>
+            <tx:method name="*" propagation="REQUIRED" read-only="false"/>
+            <tx:method name="*" rollback-for="java.lang.Throwable"/>
+        </tx:attributes>
+    </tx:advice>                
+
+  
+
+    <import resource="classpath:mybatis-spring.xml"/>
+    <!-- 监听器启动加载初始化数据 end -->
+    <!-- 系统消息配置 start -->
+    <bean id="messageSource"
+          class="org.springframework.context.support.ResourceBundleMessageSource">
+        <property name="basename">
+            <value>classpath:message_zh_CN</value>
+        </property>
+    </bean>
+ 
+</beans>

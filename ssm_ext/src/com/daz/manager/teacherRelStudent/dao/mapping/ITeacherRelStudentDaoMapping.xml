@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.daz.manager.teacherRelStudent.dao.ITeacherRelStudentDao">
+<insert id="addTeacherRelStudent" parameterType="java.util.List">
+	insert into TEACHER_REL_STUDENT
+	(
+		REL_CODE,
+		TEACHER_ID,
+		STUDENT_ID
+	)
+	select
+			SEQ_TEACHER_REL_STUDENT.Nextval as REL_CODE,
+			T.TEACHER_ID,
+			T.STUDENT_ID
+	from
+	(
+		<foreach collection="list" item="item" index="index" separator="union all">
+				SELECT 
+					#{item.teacherId} as TEACHER_ID,
+					#{item.studentId} as STUDENT_ID
+ 				FROM DUAL
+  		</foreach>
+	)T
+</insert>
+<delete id="deleteTeacherRelStudent" parameterType="String">
+	delete from TEACHER_REL_STUDENT where
+	 TEACHER_ID=#{teacherId}	
+</delete>
+
+</mapper>
