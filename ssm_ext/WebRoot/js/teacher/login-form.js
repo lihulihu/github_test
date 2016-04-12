@@ -134,88 +134,46 @@ function formSubmit(){
 		var idenTity = Ext.getCmp('identity').getChecked()[0].inputValue;
 		var userName = Ext.getCmp("userName").getValue();
 		var Password = Ext.getCmp("password").getValue();
+		var url;
+		var location;
 		if("0" == idenTity.toString()){
-	    	if (loginPanel.getForm().isValid()) {
-	    		loginPanel.getForm().submit({
-	    				waitTitle : '提示',//标题
-	    				waitMsg : '正在提交数据请稍后...',//提示信息
-	    				url : 'teacherLoginAction.action',
-	    				method : 'post',
-	    				params : {
-	    					userName : userName,
-	    					userPassword : Password,
-	    					idenTity:idenTity,
-	    				}, //参数
-	    				success : function(form, action) {
-	    					var flag=action.result;
-	    					if (flag.success == true) {
-	    						window.location = 'indexAction.action';
-	    					} else {
-	    						Ext.Msg.alert("登录失败", flag.meg);
-	    					}
-	    				},
-	    				failure : function(form,action) {
-	    					var flag=action.result;	    				
-	    						Ext.Msg.alert("登录失败", flag.meg);
-	    				}
-	    			});
-	    	}
+			url = 'teacherLoginAction.action';
+			location = 'indexAction.action';
 		}
 		else if("1" == idenTity.toString()){
-			if (loginPanel.getForm().isValid()) {
-	    		loginPanel.getForm().submit({
-	    				waitTitle : '提示',//标题
-	    				waitMsg : '正在提交数据请稍后...',//提示信息
-	    				url : 'studentLoginAction.action',
-	    				method : 'post',
-	    				params : {
-	    					userName : userName,
-	    					userPassword : Password,
-	    					idenTity:idenTity,
-	    				}, //参数
-	    				success : function(form, action) {
-	    					var flag=action.result;
-	    					if (flag.success == true) {
-	    						//window.location = 'indexAction.action';
-	    					} else {
-	    						Ext.Msg.alert("登录失败", flag.meg);
-	    					}
-	    				},
-	    				failure : function(form,action) {
-	    					var flag=action.result;	    				
-	    						Ext.Msg.alert("登录失败", flag.meg);
-	    				}
-	    			});
-	    	}
+			url = 'studentLoginAction.action';
+			location = 'studentIndexAction.action';
 		}
 		
 		else if("2" == idenTity.toString()){
-			if (loginPanel.getForm().isValid()) {
-	    		loginPanel.getForm().submit({
-	    				waitTitle : '提示',//标题
-	    				waitMsg : '正在提交数据请稍后...',//提示信息
-	    				url : 'managerLoginAction.action',
-	    				method : 'post',
-	    				params : {
-	    					userName : userName,
-	    					userPassword : Password,
-	    					idenTity:idenTity,
-	    				}, //参数
-	    				success : function(form, action) {
-	    					var flag=action.result;
-	    					if (flag.success == true) {
-	    						window.location = 'managerIndexAction.action';
-	    					} else {
-	    						Ext.Msg.alert("登录失败", flag.meg);
-	    					}
-	    				},
-	    				failure : function(form,action) {
-	    					var flag=action.result;	    				
-	    						Ext.Msg.alert("登录失败", flag.meg);
-	    				}
-	    			});
-	    	}
+			url = 'managerLoginAction.action';
+			location = 'managerIndexAction.action';
 		}
+		if (loginPanel.getForm().isValid()) {
+    		loginPanel.getForm().submit({
+    				waitTitle : '提示',//标题
+    				waitMsg : '正在提交数据请稍后...',//提示信息
+    				url : url,
+    				method : 'post',
+    				params : {
+    					userName : userName,
+    					userPassword : Password,
+    					idenTity:idenTity,
+    				}, //参数
+    				success : function(form, action) {
+    					var flag=action.result;
+    					if (flag.success == true) {
+    						window.location = location;
+    					} else {
+    						Ext.Msg.alert("登录失败", flag.meg);
+    					}
+    				},
+    				failure : function(form,action) {
+    					var flag=action.result;	    				
+    						Ext.Msg.alert("登录失败", flag.meg);
+    				}
+    			});
+    	}
 }
 }
 Ext.onReady(LoginForm);
