@@ -2,14 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.daz.manager.managerInfo.dao.IManagerInfoDao">
-
-<select id="getManager" resultType="com.daz.manager.managerInfo.pojo.ManagerPojo" parameterType="HashMap">
+<resultMap type="com.daz.manager.managerInfo.pojo.ManagerPojo" id="managerResultMap">
+	<id column="managerId" property="managerId"/>
+	<result column="managerPassword" property="managerPassword"/>
+	<result column="managerAccount" property="managerAccount"/>
+	<result column="createDate" property="createDate"/>
+	<association property="managerLevel" column="MANAGER_LEVEL" javaType="com.daz.common.publicDict.pojo.publicDictPojo">
+		<result column="valueId" property="valueId"/> 
+  		<result column="valueName" property="valueName"/>
+	</association>
+</resultMap>
+<select id="getManager" resultMap="managerResultMap" parameterType="HashMap">
 		select
 		T1.MANAGER_ID as managerId,
 		T1.MANAGER_PASSWORD as managerPassword,
 		T1.MANAGER_ACCOUNT as managerAccount,
-		T1.MANAGER_LEVEL as managerLevel	
-		from MANAGER T1
+		T2.VALUE_ID as valueId,
+		T2.VALUE_NAME as valueName,
+		T1.CREATE_DATE as createDate	
+		from MANAGER T1 left join PUBLIC_DICT T2
+		on T1.MANAGER_LEVEL = T2.VALUE_ID and T2.PUBLIC_CODE='managerLevel'
 		<trim prefix="WHERE" prefixOverrides="AND|OR ">
 			<if test="null != managerAccount">
 			and T1.MANAGER_ACCOUNT=#{managerAccount}
@@ -20,10 +32,46 @@
 			<if test="null != managerId">
 			and T1.MANAGER_ID=#{managerId}
 			</if>
-			<if test="null != managerLevel">
-			and T1.MANAGER_LEVEL=#{managerLevel}
+			<if test="null != managerLevel and null !=managerLevel.valueId">
+			and T1.MANAGER_LEVEL=#{managerLevel.valueId}
 			</if>
 		</trim>
 </select>
 
+<insert id="addManager" parameterType="com.daz.manager.managerInfo.pojo.ManagerPojo">
+	<selectKey resultType="string" order="BEFORE" keyProperty="managerId">
+		select SEQ_MANAGER.Nextval from dual
+	</selectKey>
+	insert into MANAGER
+	(
+		MANAGER_ID,
+		MANAGER_PASSWORD,
+		MANAGER_ACCOUNT,
+		MANAGER_LEVEL,
+		CREATE_DATE
+	)values(
+		#{managerId},
+		#{managerPassword},
+		#{managerAccount},
+		#{managerLevel.vauleId},
+		sysdate
+	)
+</insert>
+<update id="updateManager" parameterType="com.daz.manager.managerInfo.pojo.ManagerPojo">
+	update MANAGER set
+	MANAGER_PASSWORD=#{managerPassword},
+	MANAGER_ACCOUNT=#{managerAccount},
+	MANAGER_LEVEL=#{managerLevel.valueId}
+	where MANAGER_ID=#{managerId}
+</update>
+
+
+<delete id="deleteManager" parameterType="java.util.List">
+		delete from MANAGER
+		<where>
+  <foreach collection="list" index="index" item="item" open="(" separator="or" close=")">     
+		IMANAGER_ID=#{item}
+    </foreach>
+  </where>
+</delete>
 </mapper>

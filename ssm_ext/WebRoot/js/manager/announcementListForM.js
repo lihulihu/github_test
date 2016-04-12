@@ -70,6 +70,13 @@ var grid = Ext.create('Ext.grid.GridPanel',{
 		}]		
 	},{
 		dock:'bottom',
+		xtype:'pagingtoolbar',	
+		store:announcementstore,
+		displayInfo:true,
+		displayMsg:'显示{0}-{1}条，共计{2}条',
+		emptyMsg:"没有数据",
+	},{
+		dock:'bottom',
 		xtype:'label',
 		html:'<div style="font-size:12px;color:red">1.双击可进行单行编辑</div>'
 	}],

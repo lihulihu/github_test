@@ -11,39 +11,18 @@ mymessage = function () {
         blankText: '请输入姓名',
         maxLengthText: '姓名不能超过10个字符',
     };
-    //创建政治面貌数据源
-    var combostore = {
-        xtype: 'Ext.data.Store',
-        singleton : true,
-        proxy:{ 
-        	type:'ajax',
-        	url: 'publicDictAction.action' ,      
-        	reader: { 
-        		type: 'json', 
-        		root: 'list' 
-        	},
-        	extraParams:{
-        		publicCode:'political status',
-        	}
-        },
-        fields:['valueId','valueName'],
-        autoLoad: true,        
-    };
-    //政治面貌下拉列表
-   var cobpolitical =  Ext.create('Ext.form.field.ComboBox',{
-    	//extend: 'Ext.form.field.ComboBox',
-    	id:'political',
-    	alias:'widget.lifechannelCombo',
-        width: 200,
-        fieldLabel: '政治面貌',
-        store: combostore,
-        displayField: 'valueName',
-        valueField: 'valueId',
-        triggerAction: 'all',
-        emptyText: '请选择...',
-        blankText: '请选择政治面貌',        
-        queryMode:'local',
-    });
+    //政治面貌
+    var cobpolitical = {
+            width: 200,
+            allowBlank: false,    
+            xtype: 'textfield',
+            id: 'political',
+            //maxLength: 10,
+            fieldLabel: '政治面貌',
+            readOnly:true,
+           // blankText: '请输入姓名',
+           // maxLengthText: '姓名不能超过10个字符',
+        };
     //毕业院校
     var finishschool = {
         name: 'finishschool',
@@ -70,39 +49,18 @@ mymessage = function () {
             allowBlank: false,
             blankText: '请输入年龄',  
     };
-    //学院数据
-    var academystore = {
-            xtype: 'Ext.data.Store',
-            singleton : true,
-            proxy:{ 
-            	type:'ajax',
-            	url: 'publicDictAction.action' ,      
-            	reader: { 
-            		type: 'json', 
-            		root: 'list' 
-            	},
-            	extraParams:{
-            		publicCode:'academy',
-            	}
-            },
-            fields:['valueId','valueName'],
-            autoLoad: true,        
-        };
-        //学院下拉列表
-       var academybox =  Ext.create('Ext.form.field.ComboBox',{
-        	//extend: 'Ext.form.field.ComboBox',
-        	id:'academy',
-        	alias:'widget.lifechannelCombo',
+    //学院
+    var academybox = {
             width: 200,
+            allowBlank: false,    
+            xtype: 'textfield',
+            id: 'academy',
+            //maxLength: 10,
             fieldLabel: '学院',
-            store: academystore,
-            displayField: 'valueName',
-            valueField: 'valueId',
-            triggerAction: 'all',
-            emptyText: '请选择...',
-            blankText: '请选择学院',        
-            queryMode:'local',
-        });
+            readOnly:true,
+           // blankText: '请输入姓名',
+           // maxLengthText: '姓名不能超过10个字符',
+        };
     
     //第一列包含4行
     var column1 = {
@@ -128,47 +86,18 @@ mymessage = function () {
         items: [{ name: 'sex', inputValue: '0', boxLabel: '男', checked: true }, { name: 'sex', inputValue: '1', boxLabel: '女'}],
        
     };
-    var jobstore = {
-            xtype: 'Ext.data.Store',
-            singleton : true,
-            proxy:{ 
-            	type:'ajax',
-            	url: 'publicDictAction.action' ,      
-            	reader: { 
-            		type: 'json', 
-            		root: 'list' 
-            	},
-            	extraParams:{
-            		publicCode:'teacher job',
-            	}
-            },
-            fields:['valueId','valueName'],
-            autoLoad: true,        
-        };
-        //职称下拉列表
-        var teacherJob = Ext.create('Ext.form.field.ComboBox',{
-        	//extend: 'Ext.form.field.ComboBox',
-        	id:'job',
-        	alias:'widget.lifechannelCombo',
+    var teacherJob = {
             width: 200,
+            allowBlank: false,    
+            xtype: 'textfield',
+            id: 'job',
+            readOnly:true,
+            //maxLength: 10,
             fieldLabel: '职称',
-            store: jobstore,
-            displayField: 'valueName',
-            valueField: 'valueId',
-            triggerAction: 'all',
-            emptyText: '请选择...',
-            blankText: '请选择职称',        
-            queryMode:'local',
-        });
-    /*var numheight = {
-        id: 'job',
-        fieldLabel: '职称',
-        width: 200,
-        allowBlank: false,
-        blankText: '请输入职称',
-        xtype: 'textfield',
-     
-    };*/
+           // blankText: '请输入姓名',
+           // maxLengthText: '姓名不能超过10个字符',
+        };
+    
     //email
     var email = {
         width: 200,
@@ -442,14 +371,14 @@ mymessage = function () {
     		Ext.getCmp("teacherName").setValue(obj.list[0].teacherName);
     		Ext.getCmp("email").setValue(obj.list[0].email);
     		Ext.getCmp("phone").setValue(obj.list[0].phone);
-    		Ext.getCmp("job").setValue(obj.list[0].job.valueId);
+    		Ext.getCmp("job").setValue(obj.list[0].job.valueName);
     		obj.list[0].photo != null ? Ext.getCmp('image').getEl().dom.src= obj.list[0].photo:"";
-    		Ext.getCmp('political').setValue(obj.list[0].political.valueId);
+    		Ext.getCmp('political').setValue(obj.list[0].political.valueName);
     		Ext.getCmp('synopsis').setValue(obj.list[0].synopsis);
     		Ext.getCmp('age').setValue(obj.list[0].age);
     		Ext.getCmp('finishschool').setValue(obj.list[0].finishSchool);
     		Ext.getCmp('sex').setValue({sex:obj.list[0].sex});
-    		Ext.getCmp('academy').setValue(obj.list[0].academy.valueId);
+    		Ext.getCmp('academy').setValue(obj.list[0].academy.valueName);
     		Ext.getCmp('professional').setValue(obj.list[0].professional.valueId);
     	},
     	failure : function(response, option) {
@@ -465,10 +394,10 @@ mymessage = function () {
     	+",'age':"+Ext.getCmp('age').value
     	+",'email':"+"'"+Ext.getCmp('email').value+"'"
     	+",'phone':"+"'"+Ext.getCmp('phone').value+"'"
-    	+",'job':"+"{'valueId':"+"'"+Ext.getCmp('job').value+"'}"
-    	+",'political':"+"{'valueId':"+"'"+Ext.getCmp('political').value+"'}"
+    	/*+",'job':"+"{'valueId':"+"'"+Ext.getCmp('job').value+"'}"*/
+    	/*+",'political':"+"{'valueId':"+"'"+Ext.getCmp('political').value+"'}"*/
     	+",'synopsis':"+"'"+Ext.getCmp('synopsis').value+"'"
-    	+",'academy':"+"{'valueId':"+"'"+Ext.getCmp('academy').value+"'}"
+    	/*+",'academy':"+"{'valueId':"+"'"+Ext.getCmp('academy').value+"'}"*/
     	+",'professional':"+"{'valueId':"+"'"+Ext.getCmp('professional').value+"'}"
     	+"}";
     	

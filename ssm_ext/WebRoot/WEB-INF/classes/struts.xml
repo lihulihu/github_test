@@ -69,7 +69,7 @@
 	<result name="success" type="json">
 	<param name="includeProperties">nodeList.*</param></result>
  </action>
- <action name="leaveMessageAction" class="com.daz.teacher.leaveMessage.action.LeaveMessageAction" method="searchLeaveMessage">
+ <action name="leaveMessageAction" class="com.daz.teacher.leaveMessage.action.LeaveMessageAction" method="buddingResult">
 	<result name="success" type="json">
 	<param name="includeProperties">result</param>
 	</result>	
@@ -208,6 +208,28 @@
 			</result>
 			<interceptor-ref name="defaultStack"></interceptor-ref>
 </action>
+
+<action name="managerPageInfoAction" class="com.daz.manager.managerInfo.action.ManagerAction" method="managerPageInfo">
+			<result name="success" type="json">
+			<param name="includeProperties">success,item.*</param>
+			</result>
+</action>
+
+<action name="addManagerAction" class="com.daz.manager.managerInfo.action.ManagerAction" method="addManager">
+			<result name="success" type="json">
+			<param name="includeProperties">success,msg</param>
+			</result>
+</action>
+<action name="updateManagerAction" class="com.daz.manager.managerInfo.action.ManagerAction" method="updateManager">
+			<result name="success" type="json">
+			<param name="includeProperties">success,msg</param>
+			</result>
+</action>
+<action name="delManagerAction" class="com.daz.manager.managerInfo.action.ManagerAction" method="deleteManager">
+			<result name="success" type="json">
+			<param name="includeProperties">success,msg</param>
+			</result>
+</action>
 <action name="managerIndexAction" class="com.daz.manager.managerInfo.action.ManagerIndex" method="Index">
 	<result name="success">WEB-INF/jsp/managerIndex.jsp</result>
 </action>
@@ -255,6 +277,8 @@
                <param name="bufferSize">1024</param>	
 	</result>	
 </action>
+
+
 
 <!-- manager -->
 <!-- common -->

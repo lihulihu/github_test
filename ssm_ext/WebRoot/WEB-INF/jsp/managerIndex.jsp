@@ -24,6 +24,7 @@
     <script type="text/javascript" src="js/manager/teacherListForM.js"></script>
     <script type="text/javascript" src="js/manager/autoCorrelation.js"></script>
     <script type="text/javascript" src="js/manager/announcementListForM.js"></script>
+    <script type="text/javascript" src="js/manager/managerMessageListForM.js"></script>
     <link rel="stylesheet" type="text/css" href="css/Main.css" />
     <link rel="stylesheet" type="text/css" href="Ext/ux/css/ItemSelector.css" />
     <style type="text/css">

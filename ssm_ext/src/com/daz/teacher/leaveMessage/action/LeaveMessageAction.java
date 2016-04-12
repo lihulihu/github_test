@@ -9,6 +9,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.daz.common.dwr.teacherPush;
+import com.daz.common.publicDict.pojo.publicDictPojo;
 import com.daz.student.pojo.studentPojo;
 import com.daz.teacher.leaveMessage.pojo.LeaveMessagePojo;
 import com.daz.teacher.leaveMessage.server.ILeaveMessageService;
@@ -26,8 +27,8 @@ public class LeaveMessageAction extends ActionSupport{
 	private boolean success;
 	private int size;
 	private String teacherId;
-	public String searchLeaveMessage(){
-		List<LeaveMessagePojo> items=null;
+	public List<LeaveMessagePojo> items=null;
+	public void searchLeaveMessage(){		
 		Map<String, Object> searchconditionMap = new HashMap<String, Object>();
 		Map<String, Object> session = ActionContext.getContext().getSession();
 		this.teacherId = (String)session.get("userId");
@@ -35,14 +36,21 @@ public class LeaveMessageAction extends ActionSupport{
 		searchconditionMap.put("teacherId", teacherId);
 		try {
 			items=leaveMessageService.searchLeaveMessage(searchconditionMap);
-			updateMessage();
-			sendMessage();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	public String buddingResult(){	
+		searchLeaveMessage();
+		updateMessage();
+		sendMessage();
 		StringBuffer s= new StringBuffer();
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd H:m:s");
-		for(int i=0;i<items.size();i++){		
+		int start=0;
+		if(items.size()>50) {
+			start = items.size()-50;
+		}
+		for(int i=start;i<items.size();i++){		
 			String dentity = null;
 			Date date = items.get(i).getCreateTime();
 			String dateString = format.format(date); 
@@ -76,8 +84,7 @@ public class LeaveMessageAction extends ActionSupport{
 		}
 		leaveMessagePojo.setStudent(studentPojo);
 		leaveMessagePojo.setTeacher(teacherInfo);
-		try {
-			
+		try {			
 			leaveMessageService.addLeaveMessage(leaveMessagePojo);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -117,14 +124,14 @@ public class LeaveMessageAction extends ActionSupport{
 			list = leaveMessageService.searchLeaveMessage(searchConditionMap);
 			if(null != list){
 				studentId=((studentPojo)list.get(0).getStudent()).getStudentId();
-				updateMessage();
-				sendMessage();
+/*				updateMessage();
+				sendMessage();*/
 			}
 			this.setSuccess(true);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return searchLeaveMessage();
+		return buddingResult();
 	}
 	public void updateMessage(){
 		Map<String, Object> updateConditionMap = new HashMap<>();		
